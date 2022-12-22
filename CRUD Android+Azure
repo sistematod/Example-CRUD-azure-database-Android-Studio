@@ -1,0 +1,49 @@
+Hola estoy tratando de realizar un CRUD en android con conexion a base de datos de azure pero no he tenido exito a que se debera
+
+MainActivity.java
+rotected void onCreate(Bundle savedInstanceState) {
+super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        TextView id= (TextView)findViewById(R.id.edittextid);
+        TextView name= (TextView)findViewById(R.id.edittextname);
+        TextView address= (TextView)findViewById(R.id.edittextadress);
+        Button btninsert=(Button)findViewById(R.id.btnadd);
+        btninsert.setOnClickListener(new View.OnClickListener() {
+@Override
+public void onClick(View view) {
+    Connection connection=connectionclass();
+try {
+if (connection != null) {
+    String sqlinsert = "Insert into UserInfo_Tab values ('" + id.getText().toString() + "','" + name.getText().toString() + "','" + address.getText().toString() + "')";
+    Statement st = connection.createStatement();
+    ResultSet rs = st.executeQuery(sqlinsert);
+    }
+    } catch (Exception exception) {
+    Log.e("Error", exception.getMessage());
+    }
+    }
+    });
+    }
+@SuppressLint("NewApi")
+public Connection connectionclass(){
+    Connection con=null;
+    String ip= "sistematod.database.windows.net", port = "1433", username = "user@user", password = "********", databasename = "databaseperson";
+    StrictMode.ThreadPolicy tp= new StrictMode.ThreadPolicy.Builder().permitAll().build();
+    StrictMode.setThreadPolicy((tp));
+try {
+    Class.forName("net.sourceforge.jtds.jdbc.Driver");
+    String connectionUrl="jdbc:jtds:sqlserver://"+ip+":"+port+";database="+databasename+";User="+username+";password="+password+";encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;";
+    con= DriverManager.getConnection(connectionUrl);
+    }
+catch (Exception exception){
+    Log.e("Error", exception.getMessage());
+    }
+return con;
+   }
+}
+
+
+AndroidManifest.xml
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
